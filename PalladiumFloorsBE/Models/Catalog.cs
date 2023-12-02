@@ -1,11 +1,3 @@
-// public enum Catalog {
-//     Moulding="Moulding",
-//     Vinyl="Vinyl",
-//     Hardwood="Hardwood",
-//     Laminated="Laminated",
-//     Engineered="Engineered",
-// }
-
 public class Catalog {
     public static List<string> catalog;
 
