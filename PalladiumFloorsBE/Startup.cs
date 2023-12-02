@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 public class Startup {
@@ -20,9 +23,9 @@ public class Startup {
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        } else {
+            app.UseHttpsRedirection();
         }
-
-        app.UseHttpsRedirection();
         app.Run();
     }
 
@@ -34,5 +37,13 @@ public class Startup {
         var dbClient = new MongoClient(connectionString);
         var database = dbClient.GetDatabase(databaseName);
         services.AddSingleton(database);
+
+        // to return the id string instead of the ObjectId
+        BsonClassMap.RegisterClassMap<CatalogItem>(cm =>
+        {
+            cm.AutoMap();
+            cm.MapIdMember(c => c.Id)
+                .SetSerializer(new StringSerializer(BsonType.ObjectId));
+        });
     }
 }
