@@ -37,13 +37,5 @@ public class Startup {
         var dbClient = new MongoClient(connectionString);
         var database = dbClient.GetDatabase(databaseName);
         services.AddSingleton(database);
-
-        // to return the id string instead of the ObjectId
-        BsonClassMap.RegisterClassMap<CatalogItem>(cm =>
-        {
-            cm.AutoMap();
-            cm.MapIdMember(c => c.Id)
-                .SetSerializer(new StringSerializer(BsonType.ObjectId));
-        });
     }
 }
