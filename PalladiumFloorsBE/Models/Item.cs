@@ -18,7 +18,11 @@ public class Item
     public double sfPerBox { get; set; } = 0.0;
     public string cashPrice { get; set; } = string.Empty;
     public string nonCashPrice { get; set; } = string.Empty;
+}
 
+public class EngineeredItem : Item
+{
+    public string veneer { get; set; } = string.Empty;
 }
 
 

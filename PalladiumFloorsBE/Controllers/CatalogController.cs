@@ -40,20 +40,22 @@ public class CatalogController {
     /// <param name="catalogName">The name of the catalog.</param>
     /// <param name="database">The MongoDB database.</param>
     /// <returns>The collection of items based on the catalog name.</returns>
-    private IMongoCollection<Item> _GetCategoryItemColllection(IMongoDatabase database, string catalogName)  {
+    private IMongoCollection<T> _GetCategoryItemColllection<T>(IMongoDatabase database, string catalogName) where T : Item { 
         switch(catalogName) {
             case "Hardwood":
-                return database.GetCollection<Item>("HardwoodItems");
-            case "Laminate":
-                return database.GetCollection<Item>("LaminateItems");
-            case "Vinyl":
-                return database.GetCollection<Item>("VinylItems");
-            case "Laminated":
-                return database.GetCollection<Item>("LaminatedItems");
-            case "Moulding":
-                return database.GetCollection<Item>("MouldingItems");
+                return (IMongoCollection<T>)database.GetCollection<Item>("HardwoodItems");
+            // case "Laminate":
+            //     return database.GetCollection<Item>("LaminateItems");
+            // case "Vinyl":
+            //     return database.GetCollection<Item>("VinylItems");
+            // case "Laminated":
+            //     return database.GetCollection<Item>("LaminatedItems");
+            // case "Moulding":
+            //     return database.GetCollection<Item>("MouldingItems");
+            case "Engineered":
+                return database.GetCollection<T>("EngineeredItems");
             default:
-                return database.GetCollection<Item>("Items");
+                return (IMongoCollection<T>)database.GetCollection<Item>("Items");
         }
     }
 
@@ -65,7 +67,7 @@ public class CatalogController {
     /// <returns>The list of catalog categories.</returns>
     public List<string> GetCatalogCategories(IMongoDatabase database, string catalogId) {
         string _catalogName = _GetCatalogName(catalogId);
-        IMongoCollection<Item> _collection = _GetCategoryItemColllection(database, _catalogName);
+        IMongoCollection<Item> _collection = _GetCategoryItemColllection<Item>(database, _catalogName);
         var filter = Builders<Item>.Filter.Empty;
         return _collection.Find(filter).ToList().Select(item => item.category).Distinct().ToList();
     }

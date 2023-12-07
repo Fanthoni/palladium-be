@@ -1,6 +1,4 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
+
 using MongoDB.Driver;
 
 public class Startup {
@@ -15,6 +13,7 @@ public class Startup {
     public void ConfigureServices(IServiceCollection services) {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddAuthorization();
         this.ConfigureDatabase(services);
     }
 
