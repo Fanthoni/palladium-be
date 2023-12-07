@@ -7,21 +7,18 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 var database = app.Services.GetRequiredService<IMongoDatabase>();
-var catalog = new CatalogController(database);
 
-
-app.MapGet("/catalog", () => {
+app.MapGet("/catalog", (CatalogController catalog) => {
     var items = catalog.GetCatalogs();
     return Results.Ok(items);
 });
 
-app.MapGet("/catalog/categories/{catalogId}", (string catalogId) => {
+app.MapGet("/catalog/categories/{catalogId}", (string catalogId, CatalogController catalog) => {
     var categories = catalog.GetCatalogCategories(database, catalogId);
     return Results.Ok(categories);
 });
 
-app.MapPost("/sendMail", ([FromBody] SendMailRequest mailRequest) => {
-    var mail = new MailController(startup.Configuration);
+app.MapPost("/sendMail", ([FromBody] SendMailRequest mailRequest, MailController mail) => {
     mail.SendEmail(mailRequest.Message, mailRequest.Email, mailRequest.Name);
     return Results.Ok();
 });

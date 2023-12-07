@@ -1,4 +1,3 @@
-
 using MongoDB.Driver;
 
 public class Startup {
@@ -15,6 +14,10 @@ public class Startup {
         services.AddSwaggerGen();
         services.AddAuthorization();
         this.ConfigureDatabase(services);
+
+        services.AddControllers();
+        services.AddScoped<CatalogController>();
+        services.AddScoped<MailController>();
     }
 
     public void Configure(WebApplication app, IWebHostEnvironment env) {
