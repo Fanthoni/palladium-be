@@ -1,29 +1,53 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
-public class Item
+namespace Item.Models
 {
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
-    public string category { get; set; } = string.Empty;
-    public string description { get; set; } = string.Empty;
-    public string surface { get; set; } = string.Empty;
-    public string finish { get; set; } = string.Empty;
-    public string thickness { get; set; } = string.Empty;
-    public string width { get; set; } = string.Empty;
-    public string length { get; set; } = string.Empty;
-    // public string veneer { get; set; }
-    
-    [BsonElement("sf/box")]
-    public double sfPerBox { get; set; } = 0.0;
-    public string cashPrice { get; set; } = string.Empty;
-    public string nonCashPrice { get; set; } = string.Empty;
+    class Item
+    {
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public string Category { get; set; }
+        public string Description { get; set; }
+        public string CashPrice { get; set; }
+        public string Thickness { get; set; }
+    }
+
+    class FloorItem : Item
+    {
+        public string Surface { get; set; }
+        public string Finish { get; set; }
+        public string Width { get; set; }
+        public string Length { get; set; }
+
+        [BsonElement("sf/box")]
+        public double SfPerBox { get; set; }
+        public string NonCashPrice { get; set; } = string.Empty;
+    }
+
+
+    class Molding : Item
+    {
+        public string Dimension { get; set; } = string.Empty;
+    }
+
+    class VinylItem: FloorItem
+    {
+
+    }
+
+    class HardwoodItem: FloorItem
+    {
+
+    }
+
+    class LaminatedItem: FloorItem
+    {
+
+    }
+
+    class EngineeredItem : FloorItem
+    {
+        public string Veneer { get; set; } = string.Empty;
+    }
 }
-
-public class EngineeredItem : Item
-{
-    public string veneer { get; set; } = string.Empty;
-}
-
-
-
