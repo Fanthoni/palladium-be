@@ -14,8 +14,13 @@ app.MapGet("/catalog", (CatalogController catalog) => {
 });
 
 app.MapGet("/catalog/categories/{catalogId}", (string catalogId, CatalogController catalog) => {
-    var categories = catalog.GetCatalogCategories(database, catalogId);
+    var categories = catalog.GetCatalogCategories(catalogId);
     return Results.Ok(categories);
+});
+
+app.MapGet("/catalog/items/{catalogId}", (string catalogId, CatalogController catalog) => {
+    var items = catalog.GetCatalogItems(catalogId);
+    return Results.Ok(items);
 });
 
 app.MapPost("/sendMail", ([FromBody] SendMailRequest mailRequest, MailController mail) => {

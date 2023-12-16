@@ -6,29 +6,29 @@ namespace Item.Models
     class Item
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        public string Category { get; set; }
-        public string Description { get; set; }
-        public string CashPrice { get; set; }
-        public string Thickness { get; set; }
+        public string id { get; set; }
+        public string category { get; set; }
+        public string description { get; set; }
+        public string cashPrice { get; set; }
+        public string thickness { get; set; }
     }
 
     class FloorItem : Item
     {
-        public string Surface { get; set; }
-        public string Finish { get; set; }
-        public string Width { get; set; }
-        public string Length { get; set; }
+        public string surface { get; set; }
+        public string finish { get; set; }
+        public string width { get; set; }
+        public string length { get; set; }
 
         [BsonElement("sf/box")]
-        public double SfPerBox { get; set; }
-        public string NonCashPrice { get; set; } = string.Empty;
+        public double sfPerbox { get; set; }
+        public string nonCashPrice { get; set; } = string.Empty;
     }
 
 
     class Molding : Item
     {
-        public string Dimension { get; set; } = string.Empty;
+        public string dimension { get; set; } = string.Empty;
     }
 
     class VinylItem: FloorItem
@@ -43,11 +43,11 @@ namespace Item.Models
 
     class LaminatedItem: FloorItem
     {
-
+        public string underpadAttached { get; set; } = string.Empty;
     }
 
     class EngineeredItem : FloorItem
     {
-        public string Veneer { get; set; } = string.Empty;
+        public string veneer { get; set; } = string.Empty;
     }
 }

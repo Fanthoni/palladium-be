@@ -1,3 +1,4 @@
+using Item.Models;
 using MongoDB.Driver;
 
 /// <summary>
@@ -5,6 +6,14 @@ using MongoDB.Driver;
 /// </summary>
 public class CatalogController {
     private readonly IMongoCollection<CatalogItem> _catalogItems;
+    private readonly IMongoDatabase _database;
+
+
+    private readonly IMongoCollection<Molding> _moldingItems;
+    private readonly IMongoCollection<VinylItem> _vinylItems;
+    private readonly IMongoCollection<HardwoodItem> _hardwoodItems;
+    private readonly IMongoCollection<LaminatedItem> _laminatedItems;
+    private readonly IMongoCollection<EngineeredItem> _engineeredItems;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CatalogController"/> class.
@@ -12,6 +21,13 @@ public class CatalogController {
     /// <param name="database">The MongoDB database.</param>
     public CatalogController(IMongoDatabase database) {
         _catalogItems = database.GetCollection<CatalogItem>("CatalogItems");
+        _database = database;
+
+        _moldingItems = database.GetCollection<Molding>("MoldingItems");
+        _vinylItems = database.GetCollection<VinylItem>("VinylItems");
+        _hardwoodItems = database.GetCollection<HardwoodItem>("HardwoodItems");
+        _laminatedItems = database.GetCollection<LaminatedItem>("LaminatedItems");
+        _engineeredItems = database.GetCollection<EngineeredItem>("EngineeredItems");
     }
     
     /// <summary>
@@ -29,9 +45,9 @@ public class CatalogController {
     /// <param name="catalogId">The ID of the catalog item.</param>
     /// <returns>The name of the catalog item.</returns>
     private string _GetCatalogName(string catalogId) {
-        var filter = Builders<CatalogItem>.Filter.Eq("Id", catalogId);
+        var filter = Builders<CatalogItem>.Filter.Eq("id", catalogId);
         var catalog = _catalogItems.Find(filter).FirstOrDefault();
-        return catalog.Name;
+        return catalog.name;
     }
 
     /// <summary>
@@ -40,35 +56,62 @@ public class CatalogController {
     /// <param name="catalogName">The name of the catalog.</param>
     /// <param name="database">The MongoDB database.</param>
     /// <returns>The collection of items based on the catalog name.</returns>
-    private IMongoCollection<T> _GetCategoryItemColllection<T>(IMongoDatabase database, string catalogName) where T : Item { 
-        switch(catalogName) {
+    public List<string> GetCatalogCategories(string catalogId)
+    {
+        string catalogName = _GetCatalogName(catalogId);
+        List<Item.Models.Item> items = new List<Item.Models.Item>();
+
+        switch (catalogName)
+        {
             case "Hardwood":
-                return (IMongoCollection<T>)database.GetCollection<Item>("HardwoodItems");
-            // case "Laminate":
-            //     return database.GetCollection<Item>("LaminateItems");
-            // case "Vinyl":
-            //     return database.GetCollection<Item>("VinylItems");
-            // case "Laminated":
-            //     return database.GetCollection<Item>("LaminatedItems");
-            // case "Moulding":
-            //     return database.GetCollection<Item>("MouldingItems");
+                items = _hardwoodItems.Find(Builders<HardwoodItem>.Filter.Empty).ToList().Cast<Item.Models.Item>().ToList();
+                break;
+            case "Vinyl":
+                items = _vinylItems.Find(Builders<VinylItem>.Filter.Empty).ToList().Cast<Item.Models.Item>().ToList();
+                break;
+            case "Laminated":
+                items = _laminatedItems.Find(Builders<LaminatedItem>.Filter.Empty).ToList().Cast<Item.Models.Item>().ToList();
+                break;
             case "Engineered":
-                return database.GetCollection<T>("EngineeredItems");
-            default:
-                return (IMongoCollection<T>)database.GetCollection<Item>("Items");
+                items = _engineeredItems.Find(Builders<EngineeredItem>.Filter.Empty).ToList().Cast<Item.Models.Item>().ToList();
+                break;
+            case "Moulding":
+                items = _moldingItems.Find(Builders<Molding>.Filter.Empty).ToList().Cast<Item.Models.Item>().ToList();
+                break;
         }
+
+        return items.Select(item => item.category).Distinct().ToList();
     }
 
     /// <summary>
-    /// Retrieves the list of catalog categories for a given catalog ID.
+    /// Retrieves a list of catalog items based on the specified catalog ID.
     /// </summary>
-    /// <param name="database">The MongoDB database.</param>
     /// <param name="catalogId">The ID of the catalog.</param>
-    /// <returns>The list of catalog categories.</returns>
-    public List<string> GetCatalogCategories(IMongoDatabase database, string catalogId) {
-        string _catalogName = _GetCatalogName(catalogId);
-        IMongoCollection<Item> _collection = _GetCategoryItemColllection<Item>(database, _catalogName);
-        var filter = Builders<Item>.Filter.Empty;
-        return _collection.Find(filter).ToList().Select(item => item.category).Distinct().ToList();
+    /// <returns>A list of catalog items.</returns>
+    public List<object> GetCatalogItems(string catalogId)
+    {
+        string catalogName = _GetCatalogName(catalogId);
+        List<object> items = new List<object>();
+
+        switch (catalogName)
+        {
+            case "Hardwood":
+                items = _hardwoodItems.Find(Builders<HardwoodItem>.Filter.Empty).ToList().Cast<object>().ToList();
+                break;
+            case "Vinyl":
+                items = _vinylItems.Find(Builders<VinylItem>.Filter.Empty).ToList().Cast<object>().ToList();
+                break;
+            case "Laminated":
+                items = _laminatedItems.Find(Builders<LaminatedItem>.Filter.Empty).ToList().Cast<object>().ToList();
+                break;
+            case "Engineered":
+                items = _engineeredItems.Find(Builders<EngineeredItem>.Filter.Empty).ToList().Cast<object>().ToList();
+                break;
+            case "Moulding":
+                items = _moldingItems.Find(Builders<Molding>.Filter.Empty).ToList().Cast<object>().ToList();
+                break;
+        }
+
+        return items;
     }
 }
