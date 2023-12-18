@@ -18,6 +18,8 @@ public class Startup {
         services.AddControllers();
         services.AddScoped<CatalogController>();
         services.AddScoped<MailController>();
+
+        this.ConfigureCorsOrigin(services);
     }
 
     public void Configure(WebApplication app, IWebHostEnvironment env) {
@@ -28,6 +30,7 @@ public class Startup {
         } else {
             app.UseHttpsRedirection();
         }
+        app.UseCors("AllowSpecificOrigin");
         app.Run();
     }
 
@@ -41,5 +44,20 @@ public class Startup {
         var dbClient = new MongoClient(connectionString);
         var database = dbClient.GetDatabase(databaseName);
         services.AddSingleton(database);
+    }
+
+    private void ConfigureCorsOrigin(IServiceCollection services) {
+        string allowedOrigin = Configuration["AllowOrigin"] ?? "http://localhost:3000";
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin",
+                builder =>
+                {
+                    builder.WithOrigins(allowedOrigin)
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+        });
     }
 }
