@@ -18,6 +18,11 @@ app.MapGet("/catalog/categories/{catalogId}", (string catalogId, CatalogControll
     return Results.Ok(categories);
 });
 
+app.MapPost("/catalog/item/thumbnail", (UploadThumbnailRequest request, CatalogController catalog) => {
+    catalog.UploadItemThumbnail(request.ItemId, request.Image);
+    return Results.Ok();
+});
+
 app.MapGet("/catalog/items/{catalogId}", (string catalogId, CatalogController catalog) => {
     var items = catalog.GetCatalogItems(catalogId);
     return Results.Ok(items);

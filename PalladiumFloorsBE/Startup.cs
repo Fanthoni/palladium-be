@@ -35,9 +35,6 @@ public class Startup {
     }
 
     private void ConfigureDatabase(IServiceCollection services) {
-        // var mongoDbSettings = Configuration.GetSection("MongoDbSettings");
-        // string? connectionString = mongoDbSettings["ConnectionString"];
-        // string? databaseName = mongoDbSettings["DatabaseName"];
         string? connectionString = Configuration["DbConnectionString"];
         string? databaseName = Configuration["DbDatabaseName"];
 
