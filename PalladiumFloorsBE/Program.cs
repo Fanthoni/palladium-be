@@ -8,6 +8,8 @@ startup.ConfigureServices(builder.Services);
 var app = builder.Build();
 var database = app.Services.GetRequiredService<IMongoDatabase>();
 
+app.MapGet("/", () => "Hello Palladium API!");
+
 app.MapGet("/catalog", (CatalogController catalog) => {
     var items = catalog.GetCatalogs();
     return Results.Ok(items);
