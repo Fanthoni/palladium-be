@@ -1,2 +1,2 @@
-buildpacks: heroku/dotnet
+buildpacks: https://github.com/jincod/dotnetcore-buildpack
 web: dotnet run
