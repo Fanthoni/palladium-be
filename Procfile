@@ -1,1 +1,1 @@
-web: ./PalladiumFloorsBE
+web: dotnet PalladiumFloorsBE.dll
