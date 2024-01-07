@@ -1,1 +1,1 @@
-web: dotnet PalladiumFloorsBE
+web: ./PalladiumFloorsBE
